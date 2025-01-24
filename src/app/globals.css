@@ -37,16 +37,16 @@ body {
 }
 
 .nav-box-shadow{
-  box-shadow: -2px -5px 10px 0px
+  box-shadow: -2px -5px 10px 0px #000000 !important;
 }
 
 .img-box-shadow{
-  box-shadow: -2px -5px 10px 0px
+  box-shadow: -2px -5px 10px 0px #000000 !important;
 }
 
 
-.btn-box-shadow{
-  box-shadow: -2px -5px 10px 0px
+.btn-box-shadow:hover{
+  box-shadow: 0px 0px 10px 2px #ff7993 !important;
 }
 
 .navbar-nav hr{
@@ -68,4 +68,27 @@ body {
 
 .img-logo{
   width: 100%;
+}
+
+header{
+  position: sticky ; 
+  top: 0 ;
+  z-index: 1000 ;
+  background-color: white ;
+}
+
+.filter-link{
+  cursor: pointer;
+  text-decoration: none;
+  list-style: none;
+}
+
+.fs-filter{ 
+  font-size: 12px;
+}
+
+.hover-filter-effect:hover{
+
+  border-bottom: 2px solid #000;
+  transition: 5s ease;
 }

@@ -181,6 +181,89 @@ export default async function Home() {
             </div>
           </div>
         </nav>
+       <div className="container-fluid"> 
+        <div className="row d-flex justify-content-center align-items-center">
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/chateaux.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Châteaux</span>
+              </a> 
+              
+              </div>
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/cabane.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Cabane</span>
+              </a> 
+              
+              </div>
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/feu.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Tendance</span>
+              </a> 
+              
+              </div>
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/campagne.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Campagne</span>
+              </a> 
+              
+              </div>
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/the.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Hébergement</span>
+              </a> 
+              
+              </div>
+              <div className="col-md-1 mt-4 mb-4">
+               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
+               <Image
+                    src="/image/bateau.png"
+                    className="logo"
+                    alt="Logo"
+                    width={27}
+                    height={27}
+                  />
+                <span className="text-center hover-filter-effect fs-filter mt-2">Bateau</span>
+              </a> 
+              
+              </div>
+          </div>
+       </div> 
+        
       </header>
       <div className="container-fluid mt-5">
         <div className="row">
@@ -223,7 +306,7 @@ export default async function Home() {
                     />
                   </div>
                   <p className="card-text fw-bold">{location.price} € <span className="fw-normal">par nuit</span></p>
-                  <a href="#" className="btn btn-primary border-0 btn-bg-color">Voir les détails</a>
+                  <a href="#" className="btn btn-primary border-0 btn-box-shadow btn-bg-color">Voir les détails</a>
                 </div>
               </div>
             ))}
