@@ -8,6 +8,8 @@ export default async function Home() {
     cache: "no-store",
   });
   const LOCATION = await res.json();
+  
+
   return (
     <>
       <Head>
@@ -186,7 +188,24 @@ export default async function Home() {
         <div className="container-fluid">
           
           <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
-            <div className="p-3">
+          <div className="p-3 p-lg-4">
+              <a
+                href=""
+                className="d-flex text-black flex-column m-0 align-items-center filter-link"
+              >
+                <Image
+                  src="/image/salon.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Appartement
+                </span>
+              </a>
+            </div>
+            <div className="p-3 p-lg-4">
               <a
                 href=""
                 className="d-flex text-black flex-column align-items-center filter-link"
@@ -203,24 +222,25 @@ export default async function Home() {
                 </span>
               </a>
             </div>
-            <div className="p-3">
+            <div className="p-3 p-lg-4">
               <a
                 href=""
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
-                  src="/image/cabane.png"
+                  src="/image/villa.png"
                   className="logo"
                   alt="Logo"
                   width={27}
                   height={27}
                 />
                 <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Cabane
+                  Villa
                 </span>
               </a>
             </div>
-            <div className="p-3">
+           
+            <div className="p-3 p-lg-4">
               <a
                 href=""
                 className="d-flex text-black flex-column align-items-center filter-link"
@@ -237,24 +257,7 @@ export default async function Home() {
                 </span>
               </a>
             </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/campagne.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Campagne
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
+            <div className="p-3 p-lg-4">
               <a
                 href=""
                 className="d-flex text-black flex-column align-items-center filter-link"
@@ -271,7 +274,7 @@ export default async function Home() {
                 </span>
               </a>
             </div>
-            <div className="p-3">
+            <div className="p-3 p-lg-4">
               <a
                 href=""
                 className="d-flex text-black flex-column align-items-center filter-link"
@@ -293,6 +296,7 @@ export default async function Home() {
       </header>
       <div className="container-fluid mt-5">
         <div className="row">
+          <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
             {LOCATION.map((location) => (
               <div key={location.id} className="card border-0 col-md-3 m-3">
@@ -354,8 +358,9 @@ export default async function Home() {
           </div>
         </div>
       </div>
-
+            
       <footer></footer>
     </>
   );
 }
+
