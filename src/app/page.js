@@ -4,7 +4,9 @@ import Image from "next/image";
 import "@/app/globals.css";
 
 export default async function Home() {
-  const res = await fetch('http://localhost:3000/api/location', { cache: 'no-store' });
+  const res = await fetch("http://localhost:3000/api/location", {
+    cache: "no-store",
+  });
   const LOCATION = await res.json();
   return (
     <>
@@ -181,109 +183,139 @@ export default async function Home() {
             </div>
           </div>
         </nav>
-       <div className="container-fluid"> 
-        <div className="row d-flex justify-content-center align-items-center">
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/chateaux.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Châteaux</span>
-              </a> 
-              
-              </div>
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/cabane.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Cabane</span>
-              </a> 
-              
-              </div>
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/feu.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Tendance</span>
-              </a> 
-              
-              </div>
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/campagne.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Campagne</span>
-              </a> 
-              
-              </div>
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/the.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Hébergement</span>
-              </a> 
-              
-              </div>
-              <div className="col-md-1 mt-4 mb-4">
-               <a href="" className="d-flex text-black flex-column align-items-center filter-link">
-               <Image
-                    src="/image/bateau.png"
-                    className="logo"
-                    alt="Logo"
-                    width={27}
-                    height={27}
-                  />
-                <span className="text-center hover-filter-effect fs-filter mt-2">Bateau</span>
-              </a> 
-              
-              </div>
+        <div className="container-fluid">
+          
+          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/chateaux.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Châteaux
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/cabane.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Cabane
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/feu.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Tendance
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/campagne.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Campagne
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/the.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Hébergement
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/bateau.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Bateau
+                </span>
+              </a>
+            </div>
           </div>
-       </div> 
-        
+        </div>
       </header>
       <div className="container-fluid mt-5">
         <div className="row">
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
             {LOCATION.map((location) => (
               <div key={location.id} className="card border-0 col-md-3 m-3">
-                <div className="position-relative" style={{ width: '100%', height: '200px' }}>
+                <div
+                  className="position-relative"
+                  style={{ width: "100%", height: "200px" }}
+                >
                   <Image
                     src={location.image}
                     alt="..."
                     className="card-img-top"
                     fill // Dynamically fills the parent container
-                    style={{ objectFit: "cover", borderRadius: "5px !important" }} // Ensures the image maintains its aspect ratio
+                    style={{
+                      objectFit: "cover",
+                      borderRadius: "5px !important",
+                    }} // Ensures the image maintains its aspect ratio
                   />
                 </div>
                 <div className="card-body ps-0">
                   <div className="d-flex justify-content-between">
                     <h5 className="card-title"> {location.title} </h5>
                     <div className="d-flex align-items-center">
-                    <Image
+                      <Image
                         src="/image/stars.png"
                         className="logo me-1"
                         alt="Logo"
@@ -292,9 +324,10 @@ export default async function Home() {
                       />
                       <p className="card-text">{location.rating}</p>
                     </div>
-
                   </div>
-                  <li className="card-text mb-0">{location.room} Chambres - {location.people} Personnes</li>
+                  <li className="card-text mb-0">
+                    {location.room} Chambres - {location.people} Personnes
+                  </li>
                   <div className="d-flex align-items-baseline mt-2">
                     <p className="card-text ">{location.type}</p>
                     <Image
@@ -305,23 +338,24 @@ export default async function Home() {
                       height={15}
                     />
                   </div>
-                  <p className="card-text fw-bold">{location.price} € <span className="fw-normal">par nuit</span></p>
-                  <a href="#" className="btn btn-primary border-0 btn-box-shadow btn-bg-color">Voir les détails</a>
+                  <p className="card-text fw-bold">
+                    {location.price} €{" "}
+                    <span className="fw-normal">par nuit</span>
+                  </p>
+                  <a
+                    href="#"
+                    className="btn btn-primary border-0 btn-box-shadow btn-bg-color"
+                  >
+                    Voir les détails
+                  </a>
                 </div>
               </div>
             ))}
-
-
-
-
           </div>
         </div>
       </div>
 
-      <footer>
-        
-      </footer>
+      <footer></footer>
     </>
-
   );
 }
