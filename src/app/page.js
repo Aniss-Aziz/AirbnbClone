@@ -78,7 +78,7 @@ export default async function Home() {
               <li className="nav-item">
                 <a
                   className="nav-link btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font nav-items-font d-flex align-items-center active"
-                  href="#"
+                  href="login"
                 >
                   Connexion
                   <Image
@@ -95,7 +95,7 @@ export default async function Home() {
                 <a
                   className="nav-link btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font d-flex align-items-center nav-items-font active"
                   type="button"
-                  href="#"
+                  href="register"
                 >
                   Inscription
                   <Image
@@ -157,7 +157,7 @@ export default async function Home() {
               <div className="d-flex align-items-center me-3">
                 <a
                   className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow d-flex align-items-center justify-content-center"
-                  href="#"
+                  href="login"
                 >
                   Connexion
                   <Image
@@ -170,7 +170,7 @@ export default async function Home() {
                 </a>
                 <a
                   className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded  btn-box-shadow nav-items-font d-flex align-items-center ms-4 justify-content-center"
-                  href="#"
+                  href="register"
                 >
                   Inscription
                   <Image

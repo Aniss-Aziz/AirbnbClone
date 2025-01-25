@@ -124,3 +124,12 @@ header{
     padding: 5px 0; /* Ajustement pour les écrans plus petits */
   }
 }
+
+.register-register{
+  background-image: url(https://www.dropbox.com/scl/fi/ij6wcepj1j49zyrb6dlkw/Design-sans-titre-2.png?rlkey=sly9hcd46aqajz14073i9bu1p&st=3r33pq2k&raw=1);
+  width: 100%; /* Largeur de la div */
+  min-height: 100vh;
+  background-size: cover; /* Ajuste l'image pour couvrir tout l'espace */
+  background-position: center; /* Centre l'image dans la div */
+  background-repeat: no-repeat; /* Évite que l'image se répète */
+}

@@ -1,36 +1,65 @@
-import connectToDatabase from '../../../../lib/mongodb';
+import { MongoClient } from "mongodb";
 
-export async function GET(request) {
+const uri = 'mongodb+srv://airbnbclone:airbnbclone@cluster.7xjgw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster';
+const client = new MongoClient(uri);
+
+export async function POST(req) {
   try {
-    const db = await connectToDatabase();
-    const connectionState = db.connection.readyState;
+    const data = await req.json(); // Cette méthode permet d'obtenir le body de la requête dans Next.js 13+
+    console.log("Received request:", data); // Log de la requête reçue
+    
+    const { firstName, lastName, email, password, phone, city, country, role } = data;
 
-    let status;
-    switch (connectionState) {
-      case 0:
-        status = 'Disconnected';
-        break;
-      case 1:
-        status = 'Connected';
-        break;
-      case 2:
-        status = 'Connecting';
-        break;
-      case 3:
-        status = 'Disconnecting';
-        break;
-      default:
-        status = 'Unknown state';
+    // Validation des données
+    if (!email || !password || !firstName || !lastName || !role) {
+      console.log("Missing required fields.");
+      return new Response(
+        JSON.stringify({ message: "Missing required fields" }),
+        { status: 400 }
+      );
     }
 
-    return new Response(JSON.stringify({
-      message: 'Connection status:',
-      status,
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    console.log("Connecting to database...");
+    await client.connect(); // Connexion à la base de données
+    
+    const db = client.db("airbnbclone"); // Nom de votre base de données
+    const collection = db.collection("users");
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await collection.findOne({ email });
+    if (existingUser) {
+      console.log("User already exists.");
+      return new Response(
+        JSON.stringify({ message: "User already exists" }),
+        { status: 409 }
+      );
+    }
+
+    // Ajouter l'utilisateur à la collection
+    const result = await collection.insertOne({
+      firstName,
+      lastName,
+      email,
+      password, // ⚠️ Hashage du mot de passe nécessaire pour la production
+      phone,
+      city,
+      country,
+      role,
+      createdAt: new Date(),
+    });
+
+    console.log("User registered successfully");
+    return new Response(
+      JSON.stringify({ message: "User registered successfully", userId: result.insertedId }),
+      { status: 201 }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({
-      message: 'Erreur lors de la connexion à la base de données',
-      error: error.message,
-    }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    console.error("Error during registration:", error); // Log de l'erreur
+    return new Response(
+      JSON.stringify({ message: "Error registering user", error: error.message }),
+      { status: 500 }
+    );
+  } finally {
+    await client.close();
   }
 }
