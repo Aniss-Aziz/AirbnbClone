@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
 
@@ -16,6 +17,12 @@ export default function RegistrationForm() {
     role: "",
   });
 
+  
+  const [message, setMessage] = useState("");
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertType, setAlertType] = useState(""); // V
+
   const handleChange = (event) => {
     const { id, value } = event.target; // Récupérer l'id et la valeur de l'input
     setFormData((prevData) => ({
@@ -25,7 +32,6 @@ export default function RegistrationForm() {
   };
 
 
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     // Gestion des validations Bootstrap
@@ -47,9 +53,17 @@ export default function RegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (!formData.email || !formData.password) {
+      setMessage("Veuillez remplir tous les champs.");
+      setAlertType("danger"); // Type d'alerte pour erreur
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage("");
+
     try {
-      const res = await fetch("http://localhost:3000/api/test", {
+      const res = await fetch("http://localhost:3000/api/registration", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,18 +74,32 @@ export default function RegistrationForm() {
       const data = await res.json();
       if (res.ok) {
         setMessage("Utilisateur enregistré avec succès !");
+        setAlertType("success");
+        setTimeout(() => {
+          setMessage("");
+          router.push('/')
+        }, 2500); 
       } else {
         setMessage(data.message || "Erreur lors de l'inscription.");
+        setAlertType("danger");
+        setTimeout(() => {
+          setMessage("");
+        }, 2500); 
       }
     } catch (error) {
       setMessage("Erreur : Impossible de soumettre le formulaire.");
+      setAlertType("danger");
+      setTimeout(() => {
+        setMessage("");
+      }, 2500); 
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       <Head>
-        {/* Bootstrap CSS */}
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -93,10 +121,18 @@ export default function RegistrationForm() {
       <div className="container-fluid register-register d-flex justify-content-center align-items-center pt-5">
         <div className="row d-flex m-2 justify-content-center align-items-center mb-5">
           <div className="col-md-8 p-5 btn-rounded bg-white">
+            
             <div className="row pt-3 pb-5">
-              <h2 className="text-center">S'Inscrire</h2>
+              <h1 className="text-center fs-3">S'Inscrire avec l'adresse e-mail</h1>
             </div>
-            {message && <p className="text-center">{message}</p>}
+            {message && (
+              <div
+                className={`alert alert-${alertType} p-2 m-0 mb-3 text-center`}
+                role="alert"
+              >
+                {message}
+              </div>
+            )}
             <form className="row g-3 needs-validation" onSubmit={handleSubmit}>
               <div className="col-md-4">
                 <label htmlFor="validationCustom01" className="form-label">
@@ -208,6 +244,7 @@ export default function RegistrationForm() {
                 />
                 <div className="invalid-feedback">Saisissez votre ville.</div>
               </div>
+              
               <div className="col-md-3">
                 <label htmlFor="validationCustom05" className="form-label">
                   Pays
@@ -263,9 +300,9 @@ export default function RegistrationForm() {
                   </div>
                 </div>
               </div>
-              <div className="col-12">
-                <button className="btn btn-primary" type="submit">
-                  Submit form
+              <div className="col-12 mt-5 d-flex justify-content-center align-items-center">
+                <button className="btn btn-primary border-0 btn-box-shadow btn-bg-color" type="submit" disabled={isLoading}>
+                  {isLoading ? "Inscription..." : "S'inscrire"}
                 </button>
               </div>
             </form>

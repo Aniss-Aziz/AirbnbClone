@@ -1,19 +1,38 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
 import "@/app/globals.css";
 
-export default async function Home() {
-  const res = await fetch("http://localhost:3000/api/location", {
-    cache: "no-store",
-  });
-  const LOCATION = await res.json();
-  
+export default function Home() {
+  const [userData, setUserData] = useState(null);
+  const [LOCATION, setLOCATION] = useState([]);
+
+  useEffect(() => {
+    const fetchLocationData = async () => {
+      const res = await fetch("http://localhost:3000/api/location", {
+        cache: "no-store",
+      });
+      const locationData = await res.json();
+      setLOCATION(locationData);
+    };
+
+    const storedData = localStorage.getItem("user");
+    if (storedData) {
+      setUserData(JSON.parse(storedData));
+      console.log(storedData)
+    } else {
+      console.log("Aucune donnée trouvée dans le localStorage");
+    }
+
+    fetchLocationData();
+  }, []);
 
   return (
     <>
       <Head>
-        {/* Bootstrap CSS */}
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -21,7 +40,6 @@ export default async function Home() {
           crossOrigin="anonymous"
         />
         <link src="../public/css/style.css" />
-        {/* Bootstrap JavaScript */}
         <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-3ln9Qnv8AL7+6ZsWssNO4YlNRo6MDIVUWaDmeFRppS0P/6N6fF+CDa6pZfN8UJ0Z"
@@ -34,13 +52,7 @@ export default async function Home() {
         ></script>
       </Head>
 
-      <div
-        className="offcanvas offcanvas-start"
-        data-bs-scroll="true"
-        tabIndex="-1"
-        id="offcanvasWithBothOptions"
-        aria-labelledby="offcanvasWithBothOptionsLabel"
-      >
+      <div className="offcanvas offcanvas-start" data-bs-scroll="true" tabIndex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div className="offcanvas-header">
           <Image
             src="https://www.dropbox.com/scl/fi/lhmbodih2sd2j0j5gjkz4/Air-removebg-preview.png?rlkey=10sv5av2dgh3cauv08ca5fd3l&st=laf0w7b5&raw=1"
@@ -49,29 +61,16 @@ export default async function Home() {
             width={150}
             height={50}
           />
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
+          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div className="offcanvas-body">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item nav-items-font">
-              <a
-                className="nav-link nav-items-font active"
-                aria-current="page"
-                href="/"
-              >
-                Accueil
-              </a>
+              <a className="nav-link nav-items-font active" aria-current="page" href="/">Accueil</a>
             </li>
             <hr />
             <li className="nav-item">
-              <a className="nav-link nav-items-font active" href="#">
-                Logements
-              </a>
+              <a className="nav-link nav-items-font active" href="#">Logements</a>
             </li>
             <hr />
             <div className="mt-5 d-flex align-items-center justify-content-center">
@@ -111,6 +110,7 @@ export default async function Home() {
           </ul>
         </div>
       </div>
+      
       <header>
         <nav className="navbar nav-items-font nav-box-shadow navbar-expand-lg">
           <div className="container-fluid">
@@ -134,24 +134,13 @@ export default async function Home() {
             >
               <span className="navbar-toggler-icon nav-items-font"></span>
             </button>
-            <div
-              className="collapse navbar-collapse nav-items-font"
-              id="navbarSupportedContent"
-            >
+            <div className="collapse navbar-collapse nav-items-font" id="navbarSupportedContent">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item nav-items-font">
-                  <a
-                    className="nav-link nav-items-font active"
-                    aria-current="page"
-                    href="/"
-                  >
-                    Accueil
-                  </a>
+                  <a className="nav-link nav-items-font active" aria-current="page" href="/">Accueil</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="#">
-                    Logements
-                  </a>
+                  <a className="nav-link nav-items-font active" href="#">Logements</a>
                 </li>
               </ul>
               <div className="d-flex align-items-center me-3">
@@ -185,115 +174,8 @@ export default async function Home() {
             </div>
           </div>
         </nav>
-        <div className="container-fluid">
-          
-          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
-          <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column m-0 align-items-center filter-link"
-              >
-                <Image
-                  src="/image/salon.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Appartement
-                </span>
-              </a>
-            </div>
-            <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/chateaux.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Châteaux
-                </span>
-              </a>
-            </div>
-            <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/villa.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Villa
-                </span>
-              </a>
-            </div>
-           
-            <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/feu.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Tendance
-                </span>
-              </a>
-            </div>
-            <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/the.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Hébergement
-                </span>
-              </a>
-            </div>
-            <div className="p-3 p-lg-4">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/bateau.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Bateau
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
       </header>
+      
       <div className="container-fluid mt-5">
         <div className="row">
           <h2 className="fw-bold text-center mb-4"></h2>
@@ -308,16 +190,16 @@ export default async function Home() {
                     src={location.image}
                     alt="..."
                     className="card-img-top"
-                    fill // Dynamically fills the parent container
+                    fill
                     style={{
                       objectFit: "cover",
                       borderRadius: "5px !important",
-                    }} // Ensures the image maintains its aspect ratio
+                    }}
                   />
                 </div>
                 <div className="card-body ps-0">
                   <div className="d-flex justify-content-between">
-                    <h5 className="card-title"> {location.title} </h5>
+                    <h5 className="card-title">{location.title}</h5>
                     <div className="d-flex align-items-center">
                       <Image
                         src="/image/stars.png"
@@ -333,7 +215,7 @@ export default async function Home() {
                     {location.room} Chambres - {location.people} Personnes
                   </li>
                   <div className="d-flex align-items-baseline mt-2">
-                    <p className="card-text ">{location.type}</p>
+                    <p className="card-text">{location.type}</p>
                     <Image
                       src="/image/maison.png"
                       className="logo ms-1 "
@@ -358,9 +240,8 @@ export default async function Home() {
           </div>
         </div>
       </div>
-            
+
       <footer></footer>
     </>
   );
 }
-

@@ -133,3 +133,9 @@ header{
   background-position: center; /* Centre l'image dans la div */
   background-repeat: no-repeat; /* Évite que l'image se répète */
 }
+
+.log-logo{
+  height: 80px !important;
+  height: 80px !important;
+}
+

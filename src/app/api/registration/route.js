@@ -4,15 +4,13 @@ const uri = 'mongodb+srv://airbnbclone:airbnbclone@cluster.7xjgw.mongodb.net/?re
 const client = new MongoClient(uri);
 
 
-// Create USER
+
 export async function POST(req) {
   try {
-    const data = await req.json(); // Cette méthode permet d'obtenir le body de la requête dans Next.js 13+
-    console.log("Received request:", data); // Log de la requête reçue
-    
+    const data = await req.json(); 
+    console.log("Received request:", data); 
     const { firstName, lastName, email, password, phone, city, country, role } = data;
 
-    // Validation des données
     if (!email || !password || !firstName || !lastName || !role) {
       console.log("Missing required fields.");
       return new Response(
@@ -22,12 +20,11 @@ export async function POST(req) {
     }
 
     console.log("Connecting to database...");
-    await client.connect(); // Connexion à la base de données
+    await client.connect();
     
-    const db = client.db("airbnbclone"); // Nom de votre base de données
+    const db = client.db("airbnbclone");
     const collection = db.collection("users");
 
-    // Vérifier si l'utilisateur existe déjà
     const existingUser = await collection.findOne({ email });
     if (existingUser) {
       console.log("User already exists.");
@@ -37,12 +34,11 @@ export async function POST(req) {
       );
     }
 
-    // Ajouter l'utilisateur à la collection
     const result = await collection.insertOne({
       firstName,
       lastName,
       email,
-      password, // ⚠️ Hashage du mot de passe nécessaire pour la production
+      password,
       phone,
       city,
       country,
@@ -66,20 +62,17 @@ export async function POST(req) {
   }
 }
 
-// GET USER
 
 export async function GET() {
   try {
     console.log("Connecting to database...");
-    await client.connect(); // Connexion à la base de données
+    await client.connect();
     
-    const db = client.db("airbnbclone"); // Nom de votre base de données
+    const db = client.db("airbnbclone");
     const collection = db.collection("users");
 
-    // Récupérer tous les utilisateurs inscrits
     const users = await collection.find({}).toArray();
-    
-    // Si aucun utilisateur trouvé
+
     if (users.length === 0) {
       return new Response(
         JSON.stringify({ message: "No users found" }),
@@ -89,11 +82,11 @@ export async function GET() {
 
     console.log("Users fetched successfully");
     return new Response(
-      JSON.stringify({ users }), // Retourner la liste des utilisateurs
+      JSON.stringify({ users }),
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching users:", error); // Log de l'erreur
+    console.error("Error fetching users:", error);
     return new Response(
       JSON.stringify({ message: "Error fetching users", error: error.message }),
       { status: 500 }
