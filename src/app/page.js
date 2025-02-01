@@ -176,7 +176,7 @@ export default function Home() {
         </nav>
       </header>
       
-      <div className="container-fluid mt-5">
+      <div className="container-fluid mt-5 mb-5">
         <div className="row">
           <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
@@ -241,7 +241,48 @@ export default function Home() {
         </div>
       </div>
 
-      <footer></footer>
+      <footer className="f-border">
+        <div className="container-fluid d-flex justify-content-around align-items-center bg-lighter">
+            <div className="row pt-2 pb-4">
+             
+              <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+                <strong className="mb-1 fw-bold">Assistance</strong>
+                <a>Centre d'aide</a>
+                <a>Assistance sécurité</a>
+                <a>AirCover</a>
+                <a>Lutte contre la discrimination</a>
+                <a>Assistance handicap</a>
+                <a>Options d'annulation</a>
+               
+              </div>
+              <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Accueil de voyageurs</strong>
+                <a>Mettez votre logement sur Airbnb</a>
+                <a>AirCover pour les hôtes</a>
+                <a>Ressources pour les hôtes</a>
+                <a>Forum de la communauté</a>
+                <a>Hébérgement responsable</a>
+               
+                <a>Trouvez un co-hôte</a>
+              </div>
+              <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Airbnb</strong>
+                <a>Newsroom</a>
+                <a>Nouvelles fonctionnalités</a>
+                <a>Carrières</a>
+                <a>Investisseurs</a>
+                <a>Assistance handicap</a>
+                <a>Cartes cadeaux</a>
+          
+              </div>
+              <div className="row p-0 f-border">
+                <div className="col-md-12 d-md-flex flex-md-column p-0">
+                  <p className="pt-3 pb-3">© 2025 AirbnbClone, Inc.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </footer>
     </>
   );
 }
