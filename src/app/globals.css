@@ -7,7 +7,7 @@
   --foreground: #171717;
   --font-chart: 'poppins';
   --btn-bg-color: #f44d6d;
-  --btn-radius: 20px;
+  --btn-radius: 10px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -148,5 +148,39 @@ header{
 }
 
 .mt-a a{
-  margin-top: 10px;
+  margin-top: 10spx;
+}
+
+
+.filter-container {
+  display: flex;
+  overflow-x: auto; 
+  white-space: nowrap;
+  padding: 10px 0; 
+  scrollbar-width: thin;
+}
+.filter-container::-webkit-scrollbar {
+  height: 7px; 
+}
+.filter-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); 
+  border-radius: 10px; 
+}
+.filter-container::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1); 
+}
+.filter-container a {
+  flex: 0 0 auto; 
+  margin-right: 15px; 
+}
+@media (max-width: 768px) {
+  .filter-container {
+    padding: 5px 0; /* Ajustement pour les écrans plus petits */
+  }
+}
+
+.dropdown-menu[data-bs-popper] {
+  top: 100% !important;
+  left: -125px !important;
+  margin-top: var(--bs-dropdown-spacer) !important;
 }

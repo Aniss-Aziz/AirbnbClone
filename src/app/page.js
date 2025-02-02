@@ -9,26 +9,39 @@ import "@/app/globals.css";
 export default function Home() {
   const [userData, setUserData] = useState(null);
   const [LOCATION, setLOCATION] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLocationData = async () => {
-      const res = await fetch("http://localhost:3000/api/location", {
-        cache: "no-store",
-      });
-      const locationData = await res.json();
-      setLOCATION(locationData);
+      try {
+        const res = await fetch("http://localhost:3000/api/location");
+        if (!res.ok) {
+          throw new Error(`Erreur ${res.status}`);
+        }
+        const data = await res.json();
+        setLOCATION(data);
+        setLoading(false); // Données chargées, on arrête le loader
+      } catch (error) {
+        console.error("Erreur:", error);
+        setLOCATION([]); // En cas d'erreur, on vide LOCATION ou on peut gérer l'erreur différemment
+        setLoading(false); // Toujours arrêter le loader même en cas d'erreur
+      }
     };
 
     const storedData = localStorage.getItem("user");
     if (storedData) {
       setUserData(JSON.parse(storedData));
       console.log(storedData)
-    } else {
-      console.log("Aucune donnée trouvée dans le localStorage");
     }
 
     fetchLocationData();
   }, []);
+  
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUserData(null);
+  }
 
   return (
     <>
@@ -144,7 +157,34 @@ export default function Home() {
                 </li>
               </ul>
               <div className="d-flex align-items-center me-3">
-                <a
+              {userData ? (
+
+                <div className="dropdown">
+                <button className="btn btn-primary btn-bg-color border-0 p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {userData.firstName}
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">Mes réservations</a></li>
+                  <li><a className="dropdown-item" href="add_location">Ajouter un logement</a></li>
+                  <li><a className="dropdown-item" onClick={handleLogout} href="#">Déconnexion</a></li>
+                </ul>
+              </div>
+                // <a
+                //   className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow d-flex align-items-center justify-content-center"
+                //   href="login"
+                // >
+                //   Connexion
+                //   <Image
+                //     src="/image/utilisateur.png"
+                //     className="logo invert-color ms-2"
+                //     alt="Logo"
+                //     width={20}
+                //     height={20}
+                //   />
+                // </a>
+                ) : (
+                  <>
+                    <a
                   className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow d-flex align-items-center justify-content-center"
                   href="login"
                 >
@@ -170,18 +210,130 @@ export default function Home() {
                     height={23}
                   />
                 </a>
+                </>
+                 )}
               </div>
             </div>
           </div>
         </nav>
+        <div className="container-fluid">
+          
+          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/chateaux.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Châteaux
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/cabane.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Cabane
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/feu.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Tendance
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/campagne.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Campagne
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/the.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Hébergement
+                </span>
+              </a>
+            </div>
+            <div className="p-3">
+              <a
+                href=""
+                className="d-flex text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/bateau.png"
+                  className="logo"
+                  alt="Logo"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Bateau
+                </span>
+              </a>
+            </div>
+            </div>
+        </div>
       </header>
       
       <div className="container-fluid mt-5 mb-5">
         <div className="row">
           <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
-            {LOCATION.map((location) => (
-              <div key={location.id} className="card border-0 col-md-3 m-3">
+          {loading ? (
+              <div>Chargement...</div> // Affichage du loader pendant que les données sont récupérées
+            ) : LOCATION.length > 0 ? (
+              LOCATION.map((location) => (
+              <div key={location._id} className="card border-0 col-md-3 m-3">
                 <div
                   className="position-relative"
                   style={{ width: "100%", height: "200px" }}
@@ -236,14 +388,17 @@ export default function Home() {
                   </a>
                 </div>
               </div>
-            ))}
+              ))
+            ) : (
+              <p>Aucune location disponible</p> // Si LOCATION est vide, affichez ce message
+            )}
           </div>
         </div>
       </div>
 
       <footer className="f-border">
-        <div className="container-fluid d-flex justify-content-around align-items-center bg-lighter">
-            <div className="row pt-2 pb-4">
+        <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
+            <div className="row pt-2 pb-5">
              
               <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
                 <strong className="mb-1 fw-bold">Assistance</strong>
