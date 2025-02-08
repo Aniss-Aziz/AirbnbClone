@@ -1,34 +1,50 @@
 "use client";
-
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Head from "next/head";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "@/app/globals.css";
-
-export default function Home() {
-  const [userData, setUserData] = useState(null);
-  const [LOCATION, setLOCATION] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function LocationDetails({ params }) {
+  const equipmentIcons = {
+    "wi-fi": "/image/wifi.png",
+    piscine: "/image/piscine.png",
+    cuisine: "/image/ustensiles.png",
+    "sèche-cheveux": "/image/seche-cheveux.png",
+    télévision: "/image/video.png",
+    climatisation: "/image/flocon-de-neige.png",
+    parking: "/image/voiture-garee.png",
+    "équipements de base": "/image/tiroir.png",
+    serviettes: "/image/serviette-de-bain.png",
+    "papier toilette": "/image/papier-toilette.png",
+  };
   const router = useRouter();
+  const [userData, setUserData] = useState(null);
+  const [location, setLocation] = useState(null);
+
+  const handleReservation = (e) => {
+    e.preventDefault();
+    router.push(`/reservation/${location.id}`);
+  };
 
   useEffect(() => {
-    const fetchLocationData = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/location");
-        if (!res.ok) {
-          throw new Error(`Erreur ${res.status}`);
-        }
-        const data = await res.json();
-        setLOCATION(data);
-        setLoading(false); // Données chargées, on arrête le loader
-      } catch (error) {
-        console.error("Erreur:", error);
-        setLOCATION([]); // En cas d'erreur, on vide LOCATION ou on peut gérer l'erreur différemment
-        setLoading(false); // Toujours arrêter le loader même en cas d'erreur
+    async function fetchParams() {
+      const { id } = await params; // Déstructurer `params` avec `await`
+
+      if (id) {
+        fetch(`/api/details/${id}`) // Inclure l'ID dans l'URL
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Erreur HTTP! statut: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => setLocation(data))
+          .catch((error) =>
+            console.error("Erreur lors de la récupération du logement:", error)
+          );
       }
-    };
+    }
 
     const storedData = localStorage.getItem("user");
     if (storedData) {
@@ -36,13 +52,17 @@ export default function Home() {
       console.log(storedData);
     }
 
-    fetchLocationData();
-  }, []);
+    fetchParams();
+  }, [params]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserData(null);
   };
+
+  if (!location) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <>
@@ -65,7 +85,6 @@ export default function Home() {
           crossOrigin="anonymous"
         ></script>
       </Head>
-
       <div
         className="offcanvas offcanvas-start"
         data-bs-scroll="true"
@@ -103,7 +122,10 @@ export default function Home() {
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="add_location">
+                  <a
+                    className="nav-link nav-items-font active"
+                    href="http://localhost:3000/add_location"
+                  >
                     Ajouter un logement
                   </a>
                 </li>
@@ -223,14 +245,14 @@ export default function Home() {
                   <a
                     className="nav-link nav-items-font active"
                     aria-current="page"
-                    href="/"
+                    href="http://localhost:3000/"
                   >
                     Accueil
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="#">
-                    Logements
+                  <a className="nav-link nav-items-font active" href="http://localhost:3000/add_location">
+                    Ajouter un logement
                   </a>
                 </li>
               </ul>
@@ -252,7 +274,7 @@ export default function Home() {
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="add_location">
+                        <a className="dropdown-item" href="http://localhost:3000/add_location">
                           Ajouter un logement
                         </a>
                       </li>
@@ -271,7 +293,7 @@ export default function Home() {
                   <>
                     <a
                       className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow d-flex align-items-center justify-content-center"
-                      href="login"
+                      href="http://localhost:3000/login"
                     >
                       Connexion
                       <Image
@@ -283,8 +305,8 @@ export default function Home() {
                       />
                     </a>
                     <a
-                      className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded  btn-box-shadow nav-items-font d-flex align-items-center ms-4 justify-content-center"
-                      href="register"
+                      className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font d-flex align-items-center ms-4 justify-content-center"
+                      href="http://localhost:3000/register"
                     >
                       Inscription
                       <Image
@@ -301,188 +323,153 @@ export default function Home() {
             </div>
           </div>
         </nav>
-        <div className="container-fluid">
-          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/chateaux.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Châteaux
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/cabane.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Cabane
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/feu.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Tendance
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/campagne.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Campagne
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/the.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Hébergement
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/bateau.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Bateau
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
       </header>
 
-      <div className="container-fluid mt-5 mb-5">
+      <div className="container mt-5 mb-5">
         <div className="row">
-          <h2 className="fw-bold text-center mb-4"></h2>
-          <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
-            {loading ? (
-              <div>Chargement...</div> // Affichage du loader pendant que les données sont récupérées
-            ) : LOCATION.length > 0 ? (
-              LOCATION.map((location) => (
-                <div key={location._id} className="card border-0 col-md-3 m-3">
-                  <div
-                    className="position-relative"
-                    style={{ width: "100%", height: "200px" }}
-                  >
-                    <Image
-                      src={location.image}
-                      alt="..."
-                      className="card-img-top"
-                      fill
-                      style={{
-                        objectFit: "cover",
-                        borderRadius: "5px !important",
-                      }}
+          <div className="d-lg-flex align-items-lg-start justify-content-lg-around">
+            <div className="col-lg-7 col-md-12 d-flex flex-column align-items-start">
+              <h1 className="fs-2 mb-3">{location.title}</h1>
+              <img
+                className="logo position-relative"
+                src={location.image}
+                alt={location.title}
+                width="100%"
+                height="100%"
+              />
+            </div>
+            <div className="col-lg-4 col-md-12 mt-5 personalise-form reservation-box-shadow ms-lg-4 ms-0">
+              <form
+                action=""
+                className="input-form position-relative d-flex flex-column align-items-center p-4 pb-0 w-100 h-100"
+              >
+                <p className="card-text text-start fs-5 fw-bold">
+                  {location.price} € <span className="fw-normal fs-6">par nuit</span>
+                </p>{" "}
+                {/* <p className="nav-items-font fs-4">Indiquez vos dates</p> */}
+                <div className="col-12">
+                  <label htmlFor="start-date" className="form-label">
+                    Départ
+                  </label>
+                  <div className="input-group has-validation">
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="start-date"
+                      name="start-date"
+                      required
                     />
                   </div>
-                  <div className="card-body ps-0">
-                    <div className="d-flex justify-content-between">
-                      <h5 className="card-title">{location.title}</h5>
-                      <div className="d-flex align-items-center">
-                        <Image
-                          src="/image/stars.png"
-                          className="logo me-1"
-                          alt="Logo"
-                          width={15}
-                          height={15}
-                        />
-                        <p className="card-text">{location.rating}</p>
-                      </div>
-                    </div>
-                    <li className="card-text mb-0">
-                      {location.room} Chambres - {location.people} Personnes
-                    </li>
-                    <div className="d-flex align-items-baseline mt-2">
-                      <p className="card-text">{location.type}</p>
-                      <Image
-                        src="/image/maison.png"
-                        className="logo ms-1 "
-                        alt="Logo"
-                        width={15}
-                        height={15}
-                      />
-                    </div>
-                    <p className="card-text fw-bold">
-                      {location.price} €{" "}
-                      <span className="fw-normal">par nuit</span>
-                    </p>
-                    <button
-                      onClick={() => router.push(`/location/${location._id}`)}
-                      className="btn btn-primary border-0 btn-box-shadow btn-bg-color"
-                    >
-                      Voir les détails
-                    </button>
+                </div>
+                <div className="col-12 mt-3">
+                  <label htmlFor="final-date" className="form-label">
+                    Retour
+                  </label>
+                  <div className="input-group has-validation">
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="final-date"
+                      name="final-date"
+                      required
+                    />
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>Aucune location disponible</p> // Si LOCATION est vide, affichez ce message
-            )}
+                <div className="col-12 mt-3">
+                  <label htmlFor="final-date" className="form-label">
+                    Voyageur
+                  </label>
+                  <div className="input-group has-validation">
+                    <input
+                      placeholder="1 voyageur"
+                      type="number"
+                      className="form-control"
+                      id="final-date"
+                      name="final-date"
+                      max={location.people}
+                      required
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="btn col-12 mt-5 btn-primary border-0 btn-bg-color p-3 pt-2 pb-2 mb-5 text-white btn-rounded btn-box-shadow nav-items-font"
+                  onClick={handleReservation}
+                >
+                  Réserver
+                </button>
+              </form>
+            </div>
+          </div>
+          <div className="col-md-7 pt-5">
+            <p className="fs-4 nav-items-font fw-bold mb-0">
+              {" "}
+              Logement Entier : {location.type} - {location.city},{" "}
+              {location.country}
+            </p>
+            <span className="nav-items-font">
+              {location.people} voyageurs - {location.room} Chambres
+            </span>
+
+            <p className="mt-3 nav-items-font f-border pt-4">
+              {location.description}
+            </p>
+            <div className="mt-4 f-border pt-4">
+              <p className="mt-1 fs-5 fw-bold">Ce que propose ce logement</p>
+              <div className="d-flex flex-wrap">
+                {location.equipements.map((equipement, index) => {
+                  const equipementKey = equipement.toLowerCase();
+                  return (
+                    <div
+                      key={index}
+                      className="d-flex align-items-center w-50 mb-3"
+                    >
+                      {equipmentIcons[equipementKey] ? (
+                        <Image
+                          src={equipmentIcons[equipementKey]}
+                          alt={equipement}
+                          width={30}
+                          height={30}
+                          className="me-2"
+                        />
+                      ) : (
+                        <span className="me-2">🔹</span>
+                      )}
+                      <span>{equipement}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="mt-4 f-border pt-4">
+              <span className="fs-5 fw-bold">Où se situe le logement ?</span>
+              <br />
+              <span className="fs-6">
+                {location.city}, {location.country}
+              </span>
+            </div>
+            <div className="w-100 col-md-12 mt-4">
+              <div className="w-100 col-md-12">
+                <iframe
+                  className="position-relative w-100"
+                  height="600"
+                  frameBorder="0"
+                  scrolling="no"
+                  marginHeight="0"
+                  marginWidth="0"
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                    `${location.address}, ${location.city}, ${location.country}`
+                  )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`}
+                ></iframe>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <footer className="f-border">
+      <footer className="f-border mt-5">
         <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
-          <div className="row pt-2 pb-5">
+          <div className="row pt-2 pb-5 ms-lg-0 ms-5">
             <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
               <strong className="mb-1 fw-bold">Assistance</strong>
               <a>Centre d'aide</a>

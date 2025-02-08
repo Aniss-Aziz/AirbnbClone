@@ -184,3 +184,19 @@ header{
   left: -125px !important;
   margin-top: var(--bs-dropdown-spacer) !important;
 }
+
+.personalise-form{
+ border-radius: 10px;
+
+}
+
+.reservation-box-shadow{
+      box-shadow: -1px 2px 10px #7d7778 !important;
+}
+
+.sticky-form{
+  z-index: 1 !important;
+  position: sticky !important;
+  top: 80px !important;
+  display: inline-block;
+}

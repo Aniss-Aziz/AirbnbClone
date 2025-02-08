@@ -14,7 +14,8 @@
     "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "shadcn": "^2.1.8"
+    "shadcn": "^2.1.8",
+    "stripe": "^17.6.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

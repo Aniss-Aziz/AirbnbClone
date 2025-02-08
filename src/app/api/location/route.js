@@ -25,7 +25,7 @@ export async function POST(request) {
       const db = client.db("airbnbclone");
   
       const body = await request.json();
-      if (!body.title || !body.image || !body.room || !body.people || !body.type || !body.price || !body.description) {
+      if (!body.title || !body.image || !body.room || !body.people || !body.type || !body.price || !body.description || !body.address || !body.city || !body.country || !body.equipements) {
         return new Response(JSON.stringify({ error: "Tous les champs sont obligatoires" }), { status: 400 });
       }
   
@@ -39,6 +39,9 @@ export async function POST(request) {
         price: body.price,
         description: body.description,
         equipements: body.equipements || [],
+        address: body.address,
+        city: body.city,
+        country: body.country,
       };
   
       const result = await db.collection("locations").insertOne(newLocation);
