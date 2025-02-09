@@ -1,44 +1,181 @@
-export async function POST(request) {
-    try {
-      await client.connect();
-      const db = client.db("airbnbclone");
-  
-      // Récupérer le corps de la requête
-      const body = await request.json();
-  
-      const { locationId, userId, checkIn, checkOut, price } = body;
-  
-      // Vérifier la validité de l'ID du logement
-      if (!ObjectId.isValid(locationId)) {
-        return new Response(JSON.stringify({ error: "ID de logement invalide" }), { status: 400 });
-      }
-  
-      // Vérifier que le logement existe
-      const location = await db.collection("locations").findOne({ _id: new ObjectId(locationId) });
-  
-      if (!location) {
-        return new Response(JSON.stringify({ error: "Logement non trouvé" }), { status: 404 });
-      }
-  
-      // Créer la réservation
-      const newReservation = {
-        userId: new ObjectId(userId),
-        locationId: new ObjectId(locationId),
-        checkIn,
-        checkOut,
-        price,
-        status: "confirmed",  // Par défaut, la réservation est confirmée
-      };
-  
-      const result = await db.collection("reservations").insertOne(newReservation);
-  
-      // Retourner l'ID de la réservation créée
-      return new Response(JSON.stringify({ message: "Réservation effectuée avec succès", id: result.insertedId }), { status: 201 });
-  
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de la réservation:", error);
-      return new Response(JSON.stringify({ error: "Erreur serveur" }), { status: 500 });
-    } finally {
-      await client.close();
+import { MongoClient, ObjectId } from "mongodb";
+
+const uri = 'mongodb+srv://airbnbclone:airbnbclone@cluster.7xjgw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster';
+const client = new MongoClient(uri);
+
+export async function POST(req) {
+  try {
+    const data = await req.json(); // Récupère les données envoyées par la requête
+
+    const { startDate, endDate, numOfGuests, totalPrice, locationId, userId } = data;
+
+    // Vérifications des données
+    if (!startDate || !endDate || !numOfGuests || !totalPrice || !locationId || !userId) {
+      return new Response(
+        JSON.stringify({ message: "Missing required fields" }),
+        { status: 400 }
+      );
     }
+
+    // Connexion à MongoDB
+    await client.connect();
+    const db = client.db("airbnbclone");
+    const collection = db.collection("reservations");
+
+    // Sauvegarde de la réservation dans la base de données
+    const reservation = await collection.insertOne({
+      startDate,
+      endDate,
+      numOfGuests,
+      totalPrice,
+      locationId,
+      userId,
+      status: 'pending',
+      createdAt: new Date(),
+    });
+
+    return new Response(
+      JSON.stringify({ message: 'Réservation créée avec succès', reservation }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Erreur serveur:', error);
+    return new Response(
+      JSON.stringify({ message: 'Erreur interne du serveur' }),
+      { status: 500 }
+    );
+  } finally {
+    await client.close();
   }
+}
+
+export async function GET(req) {
+  try {
+    console.log("Tentative de connexion à la base de données...");
+    await client.connect();
+    const db = client.db("airbnbclone");
+    const reservationsCollection = db.collection("reservations");
+    const locationsCollection = db.collection("locations");
+
+    // Récupérer le userId depuis les paramètres de l'URL
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      console.error("userId est requis !");
+      return new Response(
+        JSON.stringify({ error: "userId est requis" }),
+        { status: 400 }
+      );
+    }
+
+    console.log(`Recherche des réservations pour l'utilisateur ${userId}`);
+    // Récupérer les réservations de l'utilisateur
+    const reservations = await reservationsCollection.find({ userId }).toArray();
+    
+    // Si aucune réservation n'est trouvée
+    if (reservations.length === 0) {
+      console.log("Aucune réservation trouvée pour cet utilisateur.");
+    }
+
+    console.log(`Réservations trouvées: ${reservations.length}`);
+
+    // Ajouter les informations des logements aux réservations
+    const reservationsWithLocation = await Promise.all(
+      reservations.map(async (reservation) => {
+        if (reservation.locationId) {
+          try {
+            console.log(`Recherche de la location pour locationId: ${reservation.locationId}`);
+
+            // Affichage de la valeur avant conversion
+            console.log(`LocationId (string): ${reservation.locationId}`);
+            
+            // Conversion de locationId en ObjectId
+            const location = await locationsCollection.findOne({ _id: new ObjectId(reservation.locationId) });
+
+            // Affichage de la location récupérée
+            console.log("Location trouvée:", location);
+
+            if (location) {
+              return { ...reservation, location };
+            } else {
+              console.log(`Location non trouvée pour locationId: ${reservation.locationId}`);
+              return { ...reservation, location: null };
+            }
+          } catch (err) {
+            console.error("Erreur lors de la recherche de la location:", err);
+            return { ...reservation, location: null };
+          }
+        }
+        return { ...reservation, location: null };
+      })
+    );
+
+    console.log("Réponse des réservations avec informations de logement:", reservationsWithLocation);
+
+    return new Response(JSON.stringify(reservationsWithLocation), { status: 200 });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des réservations:", error);
+    return new Response(
+      JSON.stringify({ error: "Erreur lors de la récupération des réservations" }),
+      { status: 500 }
+    );
+  } finally {
+    await client.close();
+  }
+}
+
+
+
+    export async function DELETE() {
+      try {
+        await client.connect();
+        const db = client.db("airbnbclone");
+    
+        // Supprime tous les documents de la collection "locations"
+        await db.collection("reservations").deleteMany({});
+    
+        return new Response(JSON.stringify({ message: "Tous les réservations ont été supprimés." }), { status: 200 });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: "Erreur lors de la suppression des réservations" }), { status: 500 });
+      } finally {
+        await client.close();
+      }
+    }
+
+// export async function GET() {
+//   if (req.method === 'GET') {
+//     // Code pour la méthode GET (Récupérer les réservations d'un utilisateur)
+//     try {
+//       const { userId } = req.query; // Récupère le userId depuis les paramètres de la requête (query params)
+
+//       // Vérifie si le userId est fourni
+//       if (!userId) {
+//         return res.status(400).json({ message: "UserId est requis" });
+//       }
+
+//       // Connexion à MongoDB
+//       await client.connect();
+//       const db = client.db("airbnbclone");
+//       const collection = db.collection("reservations");
+
+//       // Recherche des réservations de l'utilisateur
+//       const reservations = await collection.find({ userId }).toArray();
+
+//       // Vérifie si des réservations sont trouvées
+//       if (reservations.length === 0) {
+//         return res.status(404).json({ message: "Aucune réservation trouvée pour cet utilisateur" });
+//       }
+
+//       return res.status(200).json({ message: 'Réservations récupérées avec succès', reservations });
+//     } catch (error) {
+//       console.error('Erreur serveur:', error);
+//       return res.status(500).json({ message: 'Erreur interne du serveur' });
+//     } finally {
+//       await client.close();
+//     }
+//   } else {
+//     // Si la méthode n'est pas POST ni GET, retourne une erreur 405
+//     return res.status(405).json({ message: 'Method Not Allowed' });
+//   }
+// }

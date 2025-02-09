@@ -159,9 +159,18 @@ export default function Login() {
                         </a>
                       </li>
                       <hr />
+                      {userData?.role === "Propriétaire" && (
+                            <li>
+                              <a className="dropdown-item" href="/add_location">
+                                Ajouter un logement
+                              </a>
+                            </li>
+                            
+                          )}
+                      <hr />
                       <li className="nav-item">
                         <a className="nav-link nav-items-font active" href="add_location">
-                          Ajouter un logement
+                          Réservations
                         </a>
                       </li>
                       <hr />
@@ -178,12 +187,7 @@ export default function Login() {
                         </a>
                       </li>
                       <hr />
-                      <li className="nav-item">
-                        <a className="nav-link nav-items-font active" href="#">
-                          Logements
-                        </a>
-                      </li>
-                      <hr />
+                     
                     </>
                   )}
                   <div className="mt-5 d-flex align-items-center justify-content-center">
@@ -282,14 +286,10 @@ export default function Login() {
                           aria-current="page"
                           href="/"
                         >
-                          Accueil
+                          
                         </a>
                       </li>
-                      <li className="nav-item">
-                        <a className="nav-link nav-items-font active" href="#">
-                          Logements
-                        </a>
-                      </li>
+                     
                     </ul>
                     <div className="d-flex align-items-center me-3">
                       {userData ? (
@@ -303,14 +303,17 @@ export default function Login() {
                             {userData.firstName}
                           </button>
                           <ul className="dropdown-menu">
+                          {userData?.role === "Propriétaire" && (
                             <li>
-                              <a className="dropdown-item" href="#">
-                                Mes réservations
+                              <a className="dropdown-item" href="/add_location">
+                                Ajouter un logement
                               </a>
                             </li>
+                          )}
+                         
                             <li>
                               <a className="dropdown-item" href="add_location">
-                                Ajouter un logement
+                                Réservations
                               </a>
                             </li>
                             <li>

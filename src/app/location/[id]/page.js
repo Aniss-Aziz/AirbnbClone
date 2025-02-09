@@ -18,21 +18,21 @@ export default function LocationDetails({ params }) {
     serviettes: "/image/serviette-de-bain.png",
     "papier toilette": "/image/papier-toilette.png",
   };
-  const router = useRouter();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [numOfGuests, setNumOfGuests] = useState(1);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [userData, setUserData] = useState(null);
   const [location, setLocation] = useState(null);
 
-  const handleReservation = (e) => {
-    e.preventDefault();
-    router.push(`/reservation/${location.id}`);
-  };
-
   useEffect(() => {
-    async function fetchParams() {
-      const { id } = await params; // Déstructurer `params` avec `await`
+    async function fetchLocationDetails() {
+      const resolvedParams = await params;
+      const { id } = resolvedParams;
 
       if (id) {
-        fetch(`/api/details/${id}`) // Inclure l'ID dans l'URL
+        fetch(`/api/details/${id}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error(`Erreur HTTP! statut: ${response.status}`);
@@ -49,11 +49,79 @@ export default function LocationDetails({ params }) {
     const storedData = localStorage.getItem("user");
     if (storedData) {
       setUserData(JSON.parse(storedData));
-      console.log(storedData);
     }
 
-    fetchParams();
+    fetchLocationDetails();
   }, [params]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!location || !userData) {
+      setErrorMessage("Les informations nécessaires sont manquantes.");
+      return;
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (start >= end) {
+      setErrorMessage(
+        "La date de départ doit être antérieure à la date de retour."
+      );
+      return;
+    }
+    if (start < new Date()) {
+      setErrorMessage("La date de départ doit être dans le futur.");
+      return;
+    }
+
+    if (numOfGuests < 1 || numOfGuests > location.people) {
+      setErrorMessage(
+        `Le nombre de voyageurs doit être entre 1 et ${location.people}.`
+      );
+      return;
+    }
+
+    const numOfNights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    const totalPrice = numOfNights * location.price;
+
+    if (!userData) {
+      setErrorMessage(
+        "Vous devez être connecté pour effectuer une réservation."
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/reservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+          numOfGuests,
+          totalPrice,
+          locationId: location._id,
+          userId: userData._id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage("Réservation enregistré");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      } else {
+        setErrorMessage(data.message || "Erreur lors de la réservation.");
+        setTimeout(() => setErrorMessage(""), 3000);
+      }
+    } catch (error) {
+      setErrorMessage("Erreur lors de la connexion au serveur.");
+      setTimeout(() => setErrorMessage(""), 3000);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -115,18 +183,30 @@ export default function LocationDetails({ params }) {
                   <a
                     className="nav-link nav-items-font active"
                     aria-current="page"
-                    href="/"
+                    href="http://localhost:3000/"
                   >
                     Accueil
                   </a>
                 </li>
                 <hr />
+                {userData?.role === "Propriétaire" && (
+                  <li className="nav-item">
+                    <a
+                      className="nav-link nav-items-font active"
+                      href="http://localhost:3000/add_location"
+                    >
+                      Ajouter un logement
+                    </a>
+                  </li>
+                )}
+
+                <hr />
                 <li className="nav-item">
                   <a
                     className="nav-link nav-items-font active"
-                    href="http://localhost:3000/add_location"
+                    href="http://localhost:3000/reservations"
                   >
-                    Ajouter un logement
+                    Réservations
                   </a>
                 </li>
                 <hr />
@@ -137,15 +217,9 @@ export default function LocationDetails({ params }) {
                   <a
                     className="nav-link nav-items-font active"
                     aria-current="page"
-                    href="/"
+                    href="http://localhost:3000/"
                   >
                     Accueil
-                  </a>
-                </li>
-                <hr />
-                <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="#">
-                    Logements
                   </a>
                 </li>
                 <hr />
@@ -154,8 +228,6 @@ export default function LocationDetails({ params }) {
             <div className="mt-5 d-flex align-items-center justify-content-center">
               {userData ? (
                 <>
-                  {/* L'utilisateur est connecté */}
-
                   <li className="nav-item">
                     <button
                       className="nav-link btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font d-flex align-items-center active"
@@ -174,11 +246,10 @@ export default function LocationDetails({ params }) {
                 </>
               ) : (
                 <>
-                  {/* L'utilisateur n'est pas connecté */}
                   <li className="nav-item">
                     <a
                       className="nav-link btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font d-flex align-items-center active"
-                      href="/login"
+                      href="http://localhost:3000/login"
                     >
                       Connexion
                       <Image
@@ -246,14 +317,7 @@ export default function LocationDetails({ params }) {
                     className="nav-link nav-items-font active"
                     aria-current="page"
                     href="http://localhost:3000/"
-                  >
-                    Accueil
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="http://localhost:3000/add_location">
-                    Ajouter un logement
-                  </a>
+                  ></a>
                 </li>
               </ul>
               <div className="d-flex align-items-center me-3">
@@ -268,22 +332,24 @@ export default function LocationDetails({ params }) {
                       {userData.firstName}
                     </button>
                     <ul className="dropdown-menu">
+                      {userData?.role === "Propriétaire" && (
+                        <li>
+                          <a
+                            className="dropdown-item"
+                            href="http://localhost:3000/add_location"
+                          >
+                            Ajouter un logement
+                          </a>
+                        </li>
+                      )}
+
                       <li>
-                        <a className="dropdown-item" href="#">
-                          Mes réservations
+                        <a className="dropdown-item" href="http://localhost:3000/reservations">
+                          Réservations
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="http://localhost:3000/add_location">
-                          Ajouter un logement
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          onClick={handleLogout}
-                          href="#"
-                        >
+                        <a className="dropdown-item" onClick={handleLogout}>
                           Déconnexion
                         </a>
                       </li>
@@ -340,13 +406,24 @@ export default function LocationDetails({ params }) {
             </div>
             <div className="col-lg-4 col-md-12 mt-5 personalise-form reservation-box-shadow ms-lg-4 ms-0">
               <form
+                onSubmit={handleSubmit}
                 action=""
                 className="input-form position-relative d-flex flex-column align-items-center p-4 pb-0 w-100 h-100"
               >
+                {errorMessage && (
+                  <div className="alert col-12 text-center alert-danger">
+                    {errorMessage}
+                  </div>
+                )}
+                {successMessage && (
+                  <div className="alert col-12 text-center alert-success">
+                    {successMessage}
+                  </div>
+                )}
                 <p className="card-text text-start fs-5 fw-bold">
-                  {location.price} € <span className="fw-normal fs-6">par nuit</span>
+                  {location.price} €{" "}
+                  <span className="fw-normal fs-6">par nuit</span>
                 </p>{" "}
-                {/* <p className="nav-items-font fs-4">Indiquez vos dates</p> */}
                 <div className="col-12">
                   <label htmlFor="start-date" className="form-label">
                     Départ
@@ -357,26 +434,30 @@ export default function LocationDetails({ params }) {
                       className="form-control"
                       id="start-date"
                       name="start-date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
                       required
                     />
                   </div>
                 </div>
                 <div className="col-12 mt-3">
-                  <label htmlFor="final-date" className="form-label">
+                  <label htmlFor="end-date" className="form-label">
                     Retour
                   </label>
                   <div className="input-group has-validation">
                     <input
                       type="date"
                       className="form-control"
-                      id="final-date"
-                      name="final-date"
+                      id="end-date"
+                      name="end-date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                       required
                     />
                   </div>
                 </div>
                 <div className="col-12 mt-3">
-                  <label htmlFor="final-date" className="form-label">
+                  <label htmlFor="guests" className="form-label">
                     Voyageur
                   </label>
                   <div className="input-group has-validation">
@@ -384,9 +465,12 @@ export default function LocationDetails({ params }) {
                       placeholder="1 voyageur"
                       type="number"
                       className="form-control"
-                      id="final-date"
-                      name="final-date"
+                      id="guests"
+                      name="guests"
+                      min="1"
                       max={location.people}
+                      value={numOfGuests}
+                      onChange={(e) => setNumOfGuests(e.target.value)}
                       required
                     />
                   </div>
@@ -394,7 +478,6 @@ export default function LocationDetails({ params }) {
                 <button
                   type="submit"
                   className="btn col-12 mt-5 btn-primary border-0 btn-bg-color p-3 pt-2 pb-2 mb-5 text-white btn-rounded btn-box-shadow nav-items-font"
-                  onClick={handleReservation}
                 >
                   Réserver
                 </button>

@@ -1,34 +1,42 @@
+// pages/reservations.js
 "use client";
-
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
 import "@/app/globals.css";
 
-export default function Home() {
+export default function ReservationsPage() {
   const [userData, setUserData] = useState(null);
-  const [LOCATION, setLOCATION] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Récupérer l'ID de l'utilisateur connecté (peut être récupéré depuis un contexte, cookie, ou une session)
+  const userId = "679e10dcf318c285f1097337"; // A remplacer dynamiquement, ici un ID statique d'exemple
+
   useEffect(() => {
-    const fetchLocationData = async () => {
+    // Fonction pour récupérer les réservations depuis l'API
+    const fetchReservations = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/location");
-        if (!res.ok) {
-          throw new Error(`Erreur ${res.status}`);
+        const response = await fetch(`/api/reservation?userId=${userId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setReservations(data);
+        } else {
+          console.error("Erreur:", data.error);
         }
-        const data = await res.json();
-        setLOCATION(data);
-        setLoading(false); // Données chargées, on arrête le loader
       } catch (error) {
-        console.error("Erreur:", error);
-        setLOCATION([]); // En cas d'erreur, on vide LOCATION ou on peut gérer l'erreur différemment
-        setLoading(false); // Toujours arrêter le loader même en cas d'erreur
+        console.error("Erreur lors du chargement des réservations", error);
+      } finally {
+        setLoading(false);
       }
     };
+
+    fetchReservations();
+
 
     const storedData = localStorage.getItem("user");
     if (storedData) {
@@ -36,8 +44,7 @@ export default function Home() {
       console.log(storedData);
     }
 
-    fetchLocationData();
-  }, []);
+  }, [userId]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -296,224 +303,50 @@ export default function Home() {
             </div>
           </div>
         </nav>
-        <div className="container-fluid">
-          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/chateaux.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Châteaux
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/cabane.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Cabane
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/feu.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Tendance
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/campagne.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Campagne
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/the.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Hébergement
-                </span>
-              </a>
-            </div>
-            <div className="p-3">
-              <a
-                href=""
-                className="d-flex text-black flex-column align-items-center filter-link"
-              >
-                <Image
-                  src="/image/bateau.png"
-                  className="logo"
-                  alt="Logo"
-                  width={27}
-                  height={27}
-                />
-                <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Bateau
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="container-fluid mt-5 mb-5">
-        <div className="row">
-          <h2 className="fw-bold text-center mb-4"></h2>
-          <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
-            {loading ? (
-              <div>Chargement...</div> // Affichage du loader pendant que les données sont récupérées
-            ) : LOCATION.length > 0 ? (
-              LOCATION.map((location) => (
-                <div key={location._id} className="card border-0 col-md-3 m-3">
-                  <div
-                    className="position-relative"
-                    style={{ width: "100%", height: "200px" }}
-                  >
-                    <Image
-                      src={location.image}
-                      alt="..."
-                      className="card-img-top"
-                      fill
-                      style={{
-                        objectFit: "cover",
-                        borderRadius: "5px !important",
-                      }}
-                    />
-                  </div>
-                  <div className="card-body ps-0">
-                    <div className="d-flex justify-content-between">
-                      <h5 className="card-title">{location.title}</h5>
-                      <div className="d-flex align-items-center">
-                        <Image
-                          src="/image/stars.png"
-                          className="logo me-1"
-                          alt="Logo"
-                          width={15}
-                          height={15}
-                        />
-                        <p className="card-text">{location.rating}</p>
-                      </div>
-                    </div>
-                    <li className="card-text mb-0">
-                      {location.room} Chambres - {location.people} Personnes
-                    </li>
-                    <div className="d-flex align-items-baseline mt-2">
-                      <p className="card-text">{location.type}</p>
-                      <Image
-                        src="/image/maison.png"
-                        className="logo ms-1 "
+
+        <div className="container mt-4">
+        <h2>Mes Réservations</h2>
+        {loading ? (
+          <p>Chargement...</p>
+        ) : reservations.length === 0 ? (
+          <p>Aucune réservation trouvée.</p>
+        ) : (
+          <div className="row mt-5 ">
+            {reservations.map((reservation) => (
+              <div key={reservation._id} className="col-md-4 personalise-form reservation-box-shadow mb-4">
+                <div className="card border-0 ">
+                  <div className="card-body">
+                    <h5 className="card-title mb-3">{reservation.location.title}</h5>
+                    <img
+                        src={reservation.location.image}
+                        className="logo"
                         alt="Logo"
-                        width={15}
-                        height={15}
+                        width="100%"
+                        height="100%"
                       />
-                    </div>
-                    <p className="card-text fw-bold">
-                      {location.price} €{" "}
-                      <span className="fw-normal">par nuit</span>
-                    </p>
-                    <button
-                      onClick={() => router.push(`/location/${location._id}`)}
-                      className="btn btn-primary border-0 btn-box-shadow btn-bg-color"
-                    >
-                      Voir les détails
-                    </button>
+                    <p className="mt-3"><strong>Prix total :</strong> {reservation.totalPrice}€</p>
+                    <p><strong>Personnes :</strong> {reservation.numOfGuests}</p>
+                    
+                    
+                    {reservation.location ? (
+                      <>
+                        
+                        <p><strong> Périodes : </strong>{reservation.startDate} au {reservation.endDate}</p>
+                        <p><strong>Ville :</strong> {reservation.location.city}</p>
+                        <p><strong>{reservation.location.price}€</strong>/ par nuit</p>
+                      </>
+                    ) : (
+                      <p>Informations de logement non disponibles.</p>
+                    )}
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>Aucune location disponible</p> // Si LOCATION est vide, affichez ce message
-            )}
-          </div>
-        </div>
-      </div>
-
-      <footer className="f-border">
-        <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
-          <div className="row pt-2 pb-5">
-            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
-              <strong className="mb-1 fw-bold">Assistance</strong>
-              <a>Centre d'aide</a>
-              <a>Assistance sécurité</a>
-              <a>AirCover</a>
-              <a>Lutte contre la discrimination</a>
-              <a>Assistance handicap</a>
-              <a>Options d'annulation</a>
-            </div>
-            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
-              <strong className="mb-1 fw-bold">Accueil de voyageurs</strong>
-              <a>Mettez votre logement sur Airbnb</a>
-              <a>AirCover pour les hôtes</a>
-              <a>Ressources pour les hôtes</a>
-              <a>Forum de la communauté</a>
-              <a>Hébérgement responsable</a>
-
-              <a>Trouvez un co-hôte</a>
-            </div>
-            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
-              <strong className="mb-1 fw-bold">Airbnb</strong>
-              <a>Newsroom</a>
-              <a>Nouvelles fonctionnalités</a>
-              <a>Carrières</a>
-              <a>Investisseurs</a>
-              <a>Assistance handicap</a>
-              <a>Cartes cadeaux</a>
-            </div>
-            <div className="row p-0 f-border">
-              <div className="col-md-12 d-md-flex flex-md-column p-0">
-                <p className="pt-3 pb-3">© 2025 AirbnbClone, Inc.</p>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-      </footer>
+        )}
+      </div>
     </>
   );
 }
