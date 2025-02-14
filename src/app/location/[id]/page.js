@@ -22,7 +22,8 @@ export default function LocationDetails({ params }) {
     "eau chaude": "/image/eau-chaude.png",
     "produits ménagers": "/image/produits-de-nettoyage.png",
     "draps": "/image/couverture.png",
-    "savon": "/image/savon.png"
+    "savon": "/image/savon.png",
+    "lave-linge": "/image/machine-a-laver.png"
   };
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
