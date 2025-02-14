@@ -23,11 +23,11 @@ export default function Home() {
         }
         const data = await res.json();
         setLOCATION(data);
-        setLoading(false); 
+        setLoading(false);
       } catch (error) {
         console.error("Erreur:", error);
         setLOCATION([]);
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -44,6 +44,9 @@ export default function Home() {
     setFilter(category);
   };
 
+  const resetFilter = () => {
+    setFilter(null);
+  };
 
   const filteredLocations = filter
     ? LOCATION.filter((location) => location.type === filter)
@@ -113,13 +116,19 @@ export default function Home() {
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="add_location">
+                  <a
+                    className="nav-link nav-items-font active"
+                    href="add_location"
+                  >
                     Ajouter un logement
                   </a>
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="reservations">
+                  <a
+                    className="nav-link nav-items-font active"
+                    href="reservations"
+                  >
                     Réservations
                   </a>
                 </li>
@@ -234,9 +243,7 @@ export default function Home() {
                     className="nav-link nav-items-font active"
                     aria-current="page"
                     href="/"
-                  >
-                    
-                  </a>
+                  ></a>
                 </li>
               </ul>
               <div className="d-flex align-items-center me-3">
@@ -258,15 +265,11 @@ export default function Home() {
                       </li>
                       <li>
                         <a className="dropdown-item" href="/reservations">
-                        Mes réservations
+                          Mes réservations
                         </a>
                       </li>
                       <li>
-                        <a
-                          className="dropdown-item"
-                          onClick={handleLogout}
-                          
-                        >
+                        <a className="dropdown-item" onClick={handleLogout}>
                           Déconnexion
                         </a>
                       </li>
@@ -308,11 +311,27 @@ export default function Home() {
         </nav>
         <div className="container-fluid">
           <div className="filter-container pb-0 d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
+            <div className="p-3 pr-0">
+              <button
+                onClick={resetFilter}
+                className="d-flex b-right pe-4 bg-white text-black flex-column align-items-center filter-link"
+              >
+                <Image
+                  src="/image/recharger.png"
+                  className="logo"
+                  alt="Réinitialiser"
+                  width={27}
+                  height={27}
+                />
+                <span className="text-center hover-filter-effect fs-filter mt-2">
+                  Réinitialiser
+                </span>
+              </button>
+            </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Châteaux")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/chateaux.png"
@@ -324,13 +343,12 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Châteaux
                 </span>
-              </a>
+              </button>
             </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Appartement")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/appartements.png"
@@ -342,13 +360,12 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Appartement
                 </span>
-              </a>
+              </button>
             </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Tendance")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/feu.png"
@@ -360,13 +377,12 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Tendance
                 </span>
-              </a>
+              </button>
             </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Campagne")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/campagne.png"
@@ -378,13 +394,12 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Campagne
                 </span>
-              </a>
+              </button>
             </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Hébergement")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/the.png"
@@ -396,13 +411,12 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Hébergement
                 </span>
-              </a>
+              </button>
             </div>
             <div className="p-3">
-              <a
-                href=""
+              <button
                 onClick={() => handleFilterChange("Bateaux")}
-                className="d-flex text-black flex-column align-items-center filter-link"
+                className="d-flex border-0 bg-white text-black flex-column align-items-center filter-link"
               >
                 <Image
                   src="/image/bateau.png"
@@ -414,7 +428,7 @@ export default function Home() {
                 <span className="text-center hover-filter-effect fs-filter mt-2">
                   Bateau
                 </span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -425,8 +439,8 @@ export default function Home() {
           <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
             {loading ? (
-              <div>Chargement...</div> 
-            )  : filteredLocations.length > 0 ? (
+              <div>Chargement...</div>
+            ) : filteredLocations.length > 0 ? (
               filteredLocations.map((location) => (
                 <div key={location._id} className="card border-0 col-md-3 m-3">
                   <div
