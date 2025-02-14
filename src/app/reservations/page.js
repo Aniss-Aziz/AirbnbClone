@@ -1,4 +1,3 @@
-// pages/reservations.js
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,25 +12,24 @@ export default function ReservationsPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Récupérer l'ID de l'utilisateur connecté (peut être récupéré depuis un contexte, cookie, ou une session)
 
   useEffect(() => {
-    // Récupérer les informations de l'utilisateur depuis le localStorage
+
     const storedData = localStorage.getItem("user");
     if (storedData) {
       const parsedUser = JSON.parse(storedData);
       setUserData(parsedUser);
 
-      // Vérifier si l'ID utilisateur existe avant d'appeler l'API
+
       if (parsedUser._id) {
         fetchReservations(parsedUser._id);
       }
     } else {
-      setLoading(false); // Arrêter le chargement si pas d'utilisateur
+      setLoading(false);
     }
   }, []);
 
-  // Fonction pour récupérer les réservations depuis l'API
+  
   const fetchReservations = async (userId) => {
     try {
       const response = await fetch(`/api/reservation?userId=${userId}`);
@@ -52,7 +50,7 @@ export default function ReservationsPage() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserData(null);
-    router.push("/login"); // Rediriger vers la page de connexion après déconnexion
+    router.push("/login"); 
   };
 
   return (

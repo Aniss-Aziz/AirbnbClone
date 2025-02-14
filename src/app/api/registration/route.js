@@ -52,7 +52,7 @@ export async function POST(req) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error during registration:", error); // Log de l'erreur
+    console.error("Error during registration:", error); 
     return new Response(
       JSON.stringify({ message: "Error registering user", error: error.message }),
       { status: 500 }

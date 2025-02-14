@@ -11,6 +11,7 @@ export default function Home() {
   const [userData, setUserData] = useState(null);
   const [LOCATION, setLOCATION] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,11 +23,11 @@ export default function Home() {
         }
         const data = await res.json();
         setLOCATION(data);
-        setLoading(false); // Données chargées, on arrête le loader
+        setLoading(false); 
       } catch (error) {
         console.error("Erreur:", error);
-        setLOCATION([]); // En cas d'erreur, on vide LOCATION ou on peut gérer l'erreur différemment
-        setLoading(false); // Toujours arrêter le loader même en cas d'erreur
+        setLOCATION([]);
+        setLoading(false); 
       }
     };
 
@@ -38,6 +39,15 @@ export default function Home() {
 
     fetchLocationData();
   }, []);
+
+  const handleFilterChange = (category) => {
+    setFilter(category);
+  };
+
+
+  const filteredLocations = filter
+    ? LOCATION.filter((location) => location.type === filter)
+    : LOCATION;
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -301,6 +311,7 @@ export default function Home() {
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Châteaux")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
@@ -318,23 +329,25 @@ export default function Home() {
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Appartement")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
-                  src="/image/cabane.png"
+                  src="/image/appartements.png"
                   className="logo"
                   alt="Logo"
                   width={27}
                   height={27}
                 />
                 <span className="text-center hover-filter-effect fs-filter mt-2">
-                  Cabane
+                  Appartement
                 </span>
               </a>
             </div>
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Tendance")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
@@ -352,6 +365,7 @@ export default function Home() {
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Campagne")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
@@ -369,6 +383,7 @@ export default function Home() {
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Hébergement")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
@@ -386,6 +401,7 @@ export default function Home() {
             <div className="p-3">
               <a
                 href=""
+                onClick={() => handleFilterChange("Bateaux")}
                 className="d-flex text-black flex-column align-items-center filter-link"
               >
                 <Image
@@ -409,9 +425,9 @@ export default function Home() {
           <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
             {loading ? (
-              <div>Chargement...</div> // Affichage du loader pendant que les données sont récupérées
-            ) : LOCATION.length > 0 ? (
-              LOCATION.map((location) => (
+              <div>Chargement...</div> 
+            )  : filteredLocations.length > 0 ? (
+              filteredLocations.map((location) => (
                 <div key={location._id} className="card border-0 col-md-3 m-3">
                   <div
                     className="position-relative"
@@ -469,7 +485,7 @@ export default function Home() {
                 </div>
               ))
             ) : (
-              <p>Aucune location disponible</p> // Si LOCATION est vide, affichez ce message
+              <p>Aucune location disponible</p>
             )}
           </div>
         </div>

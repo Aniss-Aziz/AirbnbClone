@@ -38,6 +38,7 @@ export default function CreateListing() {
     "Draps",
     "Savon",
     "Papier toilette",
+    
   ];
 
   const [userData, setUserData] = useState(null);
@@ -516,6 +517,7 @@ export default function CreateListing() {
                   <option value="Hébergement">Hébergement</option>
                   <option value="Châteaux">Châteaux</option>
                   <option value="Bateaux">Bateaux</option>
+                  <option value="Campagne">Campagne</option>
                 </select>
                 <div className="invalid-feedback">
                   Veuillez choisir un type de logement.
@@ -604,7 +606,7 @@ export default function CreateListing() {
                   value={formData.equipements}
                   onChange={handleEquipementsChange}
                   required
-                  size="8" // Ajuste cette taille pour permettre à l'utilisateur de voir plusieurs options d'un coup
+                  size="8" 
                 >
                   {equipementsOptions.map((equipement, index) => (
                     <option key={index} value={equipement}>

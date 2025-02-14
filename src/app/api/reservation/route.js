@@ -5,11 +5,11 @@ const client = new MongoClient(uri);
 
 export async function POST(req) {
   try {
-    const data = await req.json(); // Récupère les données envoyées par la requête
+    const data = await req.json(); 
 
     const { startDate, endDate, numOfGuests, totalPrice, locationId, userId } = data;
 
-    // Vérifications des données
+
     if (!startDate || !endDate || !numOfGuests || !totalPrice || !locationId || !userId) {
       return new Response(
         JSON.stringify({ message: "Missing required fields" }),
@@ -17,12 +17,12 @@ export async function POST(req) {
       );
     }
 
-    // Connexion à MongoDB
+
     await client.connect();
     const db = client.db("airbnbclone");
     const collection = db.collection("reservations");
 
-    // Sauvegarde de la réservation dans la base de données
+   
     const reservation = await collection.insertOne({
       startDate,
       endDate,
@@ -57,7 +57,7 @@ export async function GET(req) {
     const reservationsCollection = db.collection("reservations");
     const locationsCollection = db.collection("locations");
 
-    // Récupérer le userId depuis les paramètres de l'URL
+
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
 
@@ -70,30 +70,30 @@ export async function GET(req) {
     }
 
     console.log(`Recherche des réservations pour l'utilisateur ${userId}`);
-    // Récupérer les réservations de l'utilisateur
+
     const reservations = await reservationsCollection.find({ userId }).toArray();
     
-    // Si aucune réservation n'est trouvée
+
     if (reservations.length === 0) {
       console.log("Aucune réservation trouvée pour cet utilisateur.");
     }
 
     console.log(`Réservations trouvées: ${reservations.length}`);
 
-    // Ajouter les informations des logements aux réservations
+
     const reservationsWithLocation = await Promise.all(
       reservations.map(async (reservation) => {
         if (reservation.locationId) {
           try {
             console.log(`Recherche de la location pour locationId: ${reservation.locationId}`);
 
-            // Affichage de la valeur avant conversion
+
             console.log(`LocationId (string): ${reservation.locationId}`);
             
-            // Conversion de locationId en ObjectId
+ 
             const location = await locationsCollection.findOne({ _id: new ObjectId(reservation.locationId) });
 
-            // Affichage de la location récupérée
+       
             console.log("Location trouvée:", location);
 
             if (location) {

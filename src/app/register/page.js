@@ -21,18 +21,18 @@ export default function RegistrationForm() {
   const [message, setMessage] = useState("");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [alertType, setAlertType] = useState(""); // V
+  const [alertType, setAlertType] = useState(""); 
 
   const handleChange = (event) => {
-    const { id, value } = event.target; // Récupérer l'id et la valeur de l'input
+    const { id, value } = event.target; 
     setFormData((prevData) => ({
-      ...prevData, // Conserver les autres champs
-      [id]: value, // Mettre à jour le champ spécifique
+      ...prevData,
+      [id]: value, 
     }));
   };
 
   useEffect(() => {
-    // Gestion des validations Bootstrap
+
     const forms = document.querySelectorAll(".needs-validation");
     Array.from(forms).forEach((form) => {
       form.addEventListener(
@@ -53,7 +53,7 @@ export default function RegistrationForm() {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setMessage("Veuillez remplir tous les champs.");
-      setAlertType("danger"); // Type d'alerte pour erreur
+      setAlertType("danger"); 
       return;
     }
 
@@ -253,8 +253,8 @@ export default function RegistrationForm() {
                 <input
                   type="text"
                   className="form-control"
-                  id="firstName" // Bootstrap validation
-                  // React state management
+                  id="firstName" 
+                  
                   value={formData.firstName}
                   onChange={handleChange}
                   required
