@@ -169,7 +169,7 @@ export default function Login() {
                           )}
                       <hr />
                       <li className="nav-item">
-                        <a className="nav-link nav-items-font active" href="add_location">
+                        <a className="nav-link nav-items-font active" href="http://localhost:3000/reservations">
                           Réservations
                         </a>
                       </li>
@@ -214,21 +214,7 @@ export default function Login() {
                     ) : (
                       <>
                         {/* L'utilisateur n'est pas connecté */}
-                        <li className="nav-item">
-                          <a
-                            className="nav-link btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow nav-items-font d-flex align-items-center active"
-                            href="/login"
-                          >
-                            Connexion
-                            <Image
-                              src="/image/utilisateur.png"
-                              className="logo invert-color ms-2"
-                              alt="Logo"
-                              width={20}
-                              height={20}
-                            />
-                          </a>
-                        </li>
+                    
       
                         <li className="nav-item ms-5">
                           <a
@@ -312,7 +298,7 @@ export default function Login() {
                           )}
                          
                             <li>
-                              <a className="dropdown-item" href="add_location">
+                              <a className="dropdown-item" href="http://localhost:3000/reservations">
                                 Réservations
                               </a>
                             </li>
@@ -329,19 +315,7 @@ export default function Login() {
                         </div>
                       ) : (
                         <>
-                          <a
-                            className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded btn-box-shadow d-flex align-items-center justify-content-center"
-                            href="login"
-                          >
-                            Connexion
-                            <Image
-                              src="/image/utilisateur.png"
-                              className="logo invert-color ms-2"
-                              alt="Logo"
-                              width={20}
-                              height={20}
-                            />
-                          </a>
+                        
                           <a
                             className="nav-link nav-items-font btn btn-primary btn-bg-color p-3 pt-2 pb-2 text-white btn-rounded  btn-box-shadow nav-items-font d-flex align-items-center ms-4 justify-content-center"
                             href="register"
@@ -438,6 +412,45 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <footer className="f-border ">
+        <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
+          <div className="row pt-2 pb-5 ms-lg-0 ms-5">
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Assistance</strong>
+              <a>Centre d'aide</a>
+              <a>Assistance sécurité</a>
+              <a>AirCover</a>
+              <a>Lutte contre la discrimination</a>
+              <a>Assistance handicap</a>
+              <a>Options d'annulation</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Accueil de voyageurs</strong>
+              <a>Mettez votre logement sur Airbnb</a>
+              <a>AirCover pour les hôtes</a>
+              <a>Ressources pour les hôtes</a>
+              <a>Forum de la communauté</a>
+              <a>Hébérgement responsable</a>
+
+              <a>Trouvez un co-hôte</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Airbnb</strong>
+              <a>Newsroom</a>
+              <a>Nouvelles fonctionnalités</a>
+              <a>Carrières</a>
+              <a>Investisseurs</a>
+              <a>Assistance handicap</a>
+              <a>Cartes cadeaux</a>
+            </div>
+            <div className="row p-0 f-border">
+              <div className="col-md-12 d-md-flex flex-md-column p-0">
+                <p className="pt-3 pb-3">© 2025 AirbnbClone, Inc.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

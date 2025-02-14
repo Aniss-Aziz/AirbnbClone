@@ -229,7 +229,7 @@ export default function CreateListing() {
                 <li className="nav-item">
                   <a
                     className="nav-link nav-items-font active"
-                    href="http://localhost:3000/"
+                    href="http://localhost:3000/reservations"
                   >
                     Réservations
                   </a>
@@ -371,7 +371,7 @@ export default function CreateListing() {
                         </li>
                       )}
                       <li>
-                        <a className="dropdown-item" href="">
+                        <a className="dropdown-item" href="http://localhost:3000/reservations">
                           Réservations
                         </a>
                       </li>
@@ -640,6 +640,45 @@ export default function CreateListing() {
           </div>
         </div>
       </div>
+      <footer className="f-border ">
+        <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
+          <div className="row pt-2 pb-5 ms-lg-0 ms-5">
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Assistance</strong>
+              <a>Centre d'aide</a>
+              <a>Assistance sécurité</a>
+              <a>AirCover</a>
+              <a>Lutte contre la discrimination</a>
+              <a>Assistance handicap</a>
+              <a>Options d'annulation</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Accueil de voyageurs</strong>
+              <a>Mettez votre logement sur Airbnb</a>
+              <a>AirCover pour les hôtes</a>
+              <a>Ressources pour les hôtes</a>
+              <a>Forum de la communauté</a>
+              <a>Hébérgement responsable</a>
+
+              <a>Trouvez un co-hôte</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Airbnb</strong>
+              <a>Newsroom</a>
+              <a>Nouvelles fonctionnalités</a>
+              <a>Carrières</a>
+              <a>Investisseurs</a>
+              <a>Assistance handicap</a>
+              <a>Cartes cadeaux</a>
+            </div>
+            <div className="row p-0 f-border">
+              <div className="col-md-12 d-md-flex flex-md-column p-0">
+                <p className="pt-3 pb-3">© 2025 AirbnbClone, Inc.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

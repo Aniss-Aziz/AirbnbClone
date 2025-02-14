@@ -14,41 +14,45 @@ export default function ReservationsPage() {
   const router = useRouter();
 
   // Récupérer l'ID de l'utilisateur connecté (peut être récupéré depuis un contexte, cookie, ou une session)
-  const userId = "679e10dcf318c285f1097337"; // A remplacer dynamiquement, ici un ID statique d'exemple
 
   useEffect(() => {
-    // Fonction pour récupérer les réservations depuis l'API
-    const fetchReservations = async () => {
-      try {
-        const response = await fetch(`/api/reservation?userId=${userId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setReservations(data);
-        } else {
-          console.error("Erreur:", data.error);
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des réservations", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReservations();
-
-
+    // Récupérer les informations de l'utilisateur depuis le localStorage
     const storedData = localStorage.getItem("user");
     if (storedData) {
-      setUserData(JSON.parse(storedData));
-      console.log(storedData);
-    }
+      const parsedUser = JSON.parse(storedData);
+      setUserData(parsedUser);
 
-  }, [userId]);
+      // Vérifier si l'ID utilisateur existe avant d'appeler l'API
+      if (parsedUser._id) {
+        fetchReservations(parsedUser._id);
+      }
+    } else {
+      setLoading(false); // Arrêter le chargement si pas d'utilisateur
+    }
+  }, []);
+
+  // Fonction pour récupérer les réservations depuis l'API
+  const fetchReservations = async (userId) => {
+    try {
+      const response = await fetch(`/api/reservation?userId=${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setReservations(data);
+      } else {
+        console.error("Erreur:", data.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement des réservations", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserData(null);
+    router.push("/login"); // Rediriger vers la page de connexion après déconnexion
   };
 
   return (
@@ -110,13 +114,19 @@ export default function ReservationsPage() {
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="add_location">
+                  <a
+                    className="nav-link nav-items-font active"
+                    href="add_location"
+                  >
                     Ajouter un logement
                   </a>
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="add_location">
+                  <a
+                    className="nav-link nav-items-font active"
+                    href="http://localhost:3000/reservations"
+                  >
                     Réservations
                   </a>
                 </li>
@@ -231,9 +241,7 @@ export default function ReservationsPage() {
                     className="nav-link nav-items-font active"
                     aria-current="page"
                     href="/"
-                  >
-                    
-                  </a>
+                  ></a>
                 </li>
               </ul>
               <div className="d-flex align-items-center me-3">
@@ -254,16 +262,12 @@ export default function ReservationsPage() {
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="/reservations">
-                        Mes réservations
+                        <a className="dropdown-item" href="http://localhost:3000/reservations">
+                          Mes réservations
                         </a>
                       </li>
                       <li>
-                        <a
-                          className="dropdown-item"
-                          onClick={handleLogout}
-                          
-                        >
+                        <a className="dropdown-item" onClick={handleLogout}>
                           Déconnexion
                         </a>
                       </li>
@@ -303,10 +307,9 @@ export default function ReservationsPage() {
             </div>
           </div>
         </nav>
-        </header>
+      </header>
 
-
-        <div className="container mt-4">
+      <div className="container mt-4">
         <h2>Mes Réservations</h2>
         {loading ? (
           <p>Chargement...</p>
@@ -314,39 +317,96 @@ export default function ReservationsPage() {
           <p>Aucune réservation trouvée.</p>
         ) : (
           <div className="row mt-5 ">
+            <div className="d-flex flex-column flex-lg-row flex-wrap align-items-center justify-content-around">
             {reservations.map((reservation) => (
-              <div key={reservation._id} className="col-md-4 personalise-form reservation-box-shadow mb-4">
-                <div className="card border-0 ">
+              <div className="card-deck col-lg-4 m-1 col-md-8 col-9 mb-5 p-0" key={reservation._id}>
+                <div className="card ">
+                  <img
+                    className="card-img-top logo img-card"
+                    src={reservation.location.image}
+                    alt="Card image cap"
+                  />
+                  <div className="card-body d-flex  justify-content-between">
+                    <h5 className="card-title">{reservation.location.title}</h5>
+                   <div className="d-flex "> 
+                     <Image src="/image/homme.png" width={30} height={30} alt="homme" className="logo mt-n"></Image>
+                       <p className="card-text">
+                         {reservation.numOfGuests}
+                        </p>
+                   </div> 
+                   
+                  </div>
                   <div className="card-body">
-                    <h5 className="card-title mb-3">{reservation.location.title}</h5>
-                    <img
-                        src={reservation.location.image}
-                        className="logo"
-                        alt="Logo"
-                        width="100%"
-                        height="100%"
-                      />
-                    <p className="mt-3"><strong>Prix total :</strong> {reservation.totalPrice}€</p>
-                    <p><strong>Personnes :</strong> {reservation.numOfGuests}</p>
-                    
-                    
-                    {reservation.location ? (
-                      <>
-                        
-                        <p><strong> Périodes : </strong>{reservation.startDate} au {reservation.endDate}</p>
-                        <p><strong>Ville :</strong> {reservation.location.city}</p>
-                        <p><strong>{reservation.location.price}€</strong>/ par nuit</p>
-                      </>
-                    ) : (
-                      <p>Informations de logement non disponibles.</p>
-                    )}
+                  <p className="card-text">
+                   <strong>{reservation.location.price}€</strong>/ par
+                   nuit
+                    </p>
+                    <p className="card-text">
+                    <strong>Prix total :</strong> {reservation.totalPrice}€
+                    </p>
+                    <p className="card-text"><strong>Ville :</strong> {reservation.location.city}</p>
+                    <p className="card-text"><strong> Dates : </strong>
+                    {reservation.startDate} | {reservation.endDate}</p>
+                    <div className="card-text"><a href={`http://localhost:3000/location/${reservation.location._id}`} className="btn btn-primary border-0 btn-box-shadow btn-bg-color">Voir les détails</a></div>
+                  </div>
+                  <div className="card-footer f-border">
+                    <small className="text-muted">
+                      Réservations passée le :{" "}
+                      {new Intl.DateTimeFormat("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(new Date(reservation.createdAt))}
+                    </small>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          </div>
         )}
       </div>
+      <footer className="f-border ">
+        <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
+          <div className="row pt-2 pb-5 ms-lg-0 ms-5">
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Assistance</strong>
+              <a>Centre d'aide</a>
+              <a>Assistance sécurité</a>
+              <a>AirCover</a>
+              <a>Lutte contre la discrimination</a>
+              <a>Assistance handicap</a>
+              <a>Options d'annulation</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Accueil de voyageurs</strong>
+              <a>Mettez votre logement sur Airbnb</a>
+              <a>AirCover pour les hôtes</a>
+              <a>Ressources pour les hôtes</a>
+              <a>Forum de la communauté</a>
+              <a>Hébérgement responsable</a>
+
+              <a>Trouvez un co-hôte</a>
+            </div>
+            <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
+              <strong className="mb-1 fw-bold">Airbnb</strong>
+              <a>Newsroom</a>
+              <a>Nouvelles fonctionnalités</a>
+              <a>Carrières</a>
+              <a>Investisseurs</a>
+              <a>Assistance handicap</a>
+              <a>Cartes cadeaux</a>
+            </div>
+            <div className="row p-0 f-border">
+              <div className="col-md-12 d-md-flex flex-md-column p-0">
+                <p className="pt-3 pb-3">© 2025 AirbnbClone, Inc.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

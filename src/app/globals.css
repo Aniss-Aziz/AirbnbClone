@@ -200,3 +200,12 @@ header{
   top: 80px !important;
   display: inline-block;
 }
+
+.mt-n{
+  margin-top: -1%;
+}
+
+.img-card{
+  max-width: 100% !important;
+  max-height: 286.925px !important;
+}

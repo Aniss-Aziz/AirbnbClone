@@ -109,7 +109,7 @@ export default function Home() {
                 </li>
                 <hr />
                 <li className="nav-item">
-                  <a className="nav-link nav-items-font active" href="add_location">
+                  <a className="nav-link nav-items-font active" href="reservations">
                     Réservations
                   </a>
                 </li>
@@ -297,7 +297,7 @@ export default function Home() {
           </div>
         </nav>
         <div className="container-fluid">
-          <div className="filter-container d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
+          <div className="filter-container pb-0 d-flex justify-content-start justify-content-lg-center justify-content-md-center align-items-center">
             <div className="p-3">
               <a
                 href=""
@@ -404,7 +404,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="container-fluid mt-5 mb-5">
+      <div className="container-fluid mb-5">
         <div className="row">
           <h2 className="fw-bold text-center mb-4"></h2>
           <div className="d-flex justify-content-center align-items-center flex-wrap p-0">
@@ -475,9 +475,9 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="f-border">
+      <footer className="f-border ">
         <div className="container-fluid  pb-5 d-flex justify-content-around align-items-center bg-lighter">
-          <div className="row pt-2 pb-5">
+          <div className="row pt-2 pb-5 ms-lg-0 ms-5">
             <div className="col-md-4 pt-5 pb-5 d-flex flex-column align-items-left mt-a">
               <strong className="mb-1 fw-bold">Assistance</strong>
               <a>Centre d'aide</a>

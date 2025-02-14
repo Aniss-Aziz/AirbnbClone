@@ -5,6 +5,7 @@ import Head from "next/head";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/app/globals.css";
+
 export default function LocationDetails({ params }) {
   const equipmentIcons = {
     "wi-fi": "/image/wifi.png",
@@ -17,6 +18,11 @@ export default function LocationDetails({ params }) {
     "équipements de base": "/image/tiroir.png",
     serviettes: "/image/serviette-de-bain.png",
     "papier toilette": "/image/papier-toilette.png",
+    "animaux acceptés": "/image/impressions-danimaux.png",
+    "eau chaude": "/image/eau-chaude.png",
+    "produits ménagers": "/image/produits-de-nettoyage.png",
+    "draps": "/image/couverture.png",
+    "savon": "/image/savon.png"
   };
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -25,6 +31,7 @@ export default function LocationDetails({ params }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [userData, setUserData] = useState(null);
   const [location, setLocation] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchLocationDetails() {
@@ -58,7 +65,9 @@ export default function LocationDetails({ params }) {
     event.preventDefault();
 
     if (!location || !userData) {
-      setErrorMessage("Les informations nécessaires sont manquantes.");
+      setErrorMessage("Vous devez être connecté.");
+      router.push('http://localhost:3000/login');
+      router
       return;
     }
 
@@ -113,6 +122,7 @@ export default function LocationDetails({ params }) {
       if (response.ok) {
         setSuccessMessage("Réservation enregistré");
         setTimeout(() => setSuccessMessage(""), 3000);
+        router.push('http://localhost:3000/reservations')
       } else {
         setErrorMessage(data.message || "Erreur lors de la réservation.");
         setTimeout(() => setErrorMessage(""), 3000);
